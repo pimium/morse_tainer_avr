@@ -31,7 +31,7 @@ set(WITH_MCU ON)
 # AVR and fuses needs to be set
 set(AVR_MCU attiny2313)
 set(AVR_H_FUSE 0xDF)
-set(AVR_L_FUSE 0x64)
+set(AVR_L_FUSE 0xE4)
 
 ### END TOOLCHAIN SETUP AREA #############################################
 
