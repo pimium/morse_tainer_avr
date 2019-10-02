@@ -24,8 +24,8 @@ cmake_minimum_required(VERSION 2.8)
 # tools to be used for programming the AVR
 ##################################################################################
 set(AVR_UPLOADTOOL avrdude)
-#set(AVR_PROGRAMMER usbasp)
-set(AVR_PROGRAMMER avrisp2)
+set(AVR_PROGRAMMER usbasp)
+#set(AVR_PROGRAMMER avrisp2)
 set(AVR_UPLOADTOOL_PORT usb)
 set(WITH_MCU ON)
 # AVR and fuses needs to be set
