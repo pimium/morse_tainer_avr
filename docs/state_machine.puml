@@ -1,0 +1,49 @@
+@startuml
+scale 800 width
+
+state "Pressed Inc" as PressedInc
+state "Idle" as Idle
+state "dPause" as dPause
+state "dPause Inc" as dPauseInc
+state "Pressed" as Pressed
+state "Dit" as Dit
+state "Dah" as Dah
+state "Arming" as Arming
+
+PressedInc: timeout = timeout - 1;
+dPauseInc: timeout = timeout - 1;
+Dit: result = result << 1;
+Dit: armed = 1;
+Dit: timeout = 20;
+Dah: result = result << 1 + 1;
+Dah: timeout = 20;
+Pressed: timeout = 20;
+Idle: result = 1;
+Pressed: armed = 0;
+Arming: armed = 1;
+
+
+[*] -right-> Idle 
+
+
+Idle -do-> Pressed : PIN5 == 0
+
+PressedInc --> Pressed
+
+Pressed --> Dit : PIN5 == 1
+Pressed --> Dah : !timeout
+Pressed --le-> PressedInc : (PIN5 == 0) \n&& (timeout)
+
+dPause -up-> dPauseInc: timeout
+dPause --up-> Idle: (PIN5 == 1) \n&& (!timeout)
+dPause --> Pressed: (armed == 1) \n&& (PIN5 == 0)
+dPause --> Pressed: (!timeout) \n&& (PIN5 == 0)
+dPause --> Arming: (armed == 0) \n&& (PIN5 == 1)
+
+dPauseInc -do-> dPause
+
+Arming --> dPause
+
+Dit --> dPause
+Dah --> dPause
+@enduml
