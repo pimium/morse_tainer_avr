@@ -31,6 +31,7 @@ typedef void *(*states)(void);
 static inline void initTimer0(void);
 static inline void disable_buzzer(void);
 static inline void enable_buzzer(void);
+inline uint8_t decode(uint8_t dit_dah);
 void *state_idle(void);
 void *state_dots(void);
 void *state_dashes(void);
@@ -147,6 +148,123 @@ static inline void initInt1(void) {
   GIMSK |= (1 << INT1);
 }
 
+inline uint8_t decode(uint8_t dit_dah) {
+  uint8_t code;
+  switch (dit_dah) {
+  case 5:
+    code = 'A';
+    break;
+  case 0x18:
+    code = 'B';
+    break;
+  case 0x1A:
+    code = 'C';
+    break;
+  case 0x0C:
+    code = 'D';
+    break;
+  case 0x02:
+    code = 'E';
+    break;
+  case 0x12:
+    code = 'F';
+    break;
+  case 0x0E:
+    code = 'G';
+    break;
+  case 0x10:
+    code = 'H';
+    break;
+  case 0x04:
+    code = 'I';
+    break;
+  case 0x17:
+    code = 'J';
+    break;
+  case 0x0D:
+    code = 'K';
+    break;
+  case 0x14:
+    code = 'L';
+    break;
+  case 0x07:
+    code = 'M';
+    break;
+  case 0x06:
+    code = 'N';
+    break;
+  case 0x0F:
+    code = 'O';
+    break;
+  case 0x16:
+    code = 'P';
+    break;
+  case 0x1D:
+    code = 'Q';
+    break;
+  case 0x0A:
+    code = 'R';
+    break;
+  case 0x08:
+    code = 'S';
+    break;
+  case 0x03:
+    code = 'T';
+    break;
+  case 0x09:
+    code = 'U';
+    break;
+  case 0x11:
+    code = 'V';
+    break;
+  case 0x0B:
+    code = 'W';
+    break;
+  case 0x19:
+    code = 'X';
+    break;
+  case 0x1B:
+    code = 'Y';
+    break;
+  case 0x1C:
+    code = 'Z';
+    break;
+  case 0x2F:
+    code = '1';
+    break;
+  case 0x27:
+    code = '2';
+    break;
+  case 0x23:
+    code = '3';
+    break;
+  case 0x21:
+    code = '4';
+    break;
+  case 0x20:
+    code = '5';
+    break;
+  case 0x30:
+    code = '6';
+    break;
+  case 0x38:
+    code = '7';
+    break;
+  case 0x3C:
+    code = '8';
+    break;
+  case 0x3E:
+    code = '9';
+    break;
+  case 0x3F:
+    code = '0';
+    break;
+  default:
+    code = '*';
+  } /* Ende switch */
+  return code;
+}
+
 int main(void) {
   //
   DDRD &= ~(1 << PD3);
@@ -167,126 +285,16 @@ int main(void) {
 
     /* clear display and home cursor */
 
-    uint8_t b;
+    uint8_t code;
     if (write_marker != read_marker) {
-      uint8_t a = buffer[(read_marker++) & 0x0F];
+      uint8_t dit_dat = buffer[(read_marker++) & 0x0F];
 
       if ((write_marker & 0x0F) == 0) {
         lcd_clrscr();
       }
-      switch (a) {
-      case 5:
-        b = 'A';
-        break;
-      case 0x18:
-        b = 'B';
-        break;
-      case 0x1A:
-        b = 'C';
-        break;
-      case 0x0C:
-        b = 'D';
-        break;
-      case 0x02:
-        b = 'E';
-        break;
-      case 0x12:
-        b = 'F';
-        break;
-      case 0x0E:
-        b = 'G';
-        break;
-      case 0x10:
-        b = 'H';
-        break;
-      case 0x04:
-        b = 'I';
-        break;
-      case 0x17:
-        b = 'J';
-        break;
-      case 0x0D:
-        b = 'K';
-        break;
-      case 0x14:
-        b = 'L';
-        break;
-      case 0x07:
-        b = 'M';
-        break;
-      case 0x06:
-        b = 'N';
-        break;
-      case 0x0F:
-        b = 'O';
-        break;
-      case 0x16:
-        b = 'P';
-        break;
-      case 0x1D:
-        b = 'Q';
-        break;
-      case 0x0A:
-        b = 'R';
-        break;
-      case 0x08:
-        b = 'S';
-        break;
-      case 0x03:
-        b = 'T';
-        break;
-      case 0x09:
-        b = 'U';
-        break;
-      case 0x11:
-        b = 'V';
-        break;
-      case 0x0B:
-        b = 'W';
-        break;
-      case 0x19:
-        b = 'X';
-        break;
-      case 0x1B:
-        b = 'Y';
-        break;
-      case 0x1C:
-        b = 'Z';
-        break;
-      case 0x2F:
-        b = '1';
-        break;
-      case 0x27:
-        b = '2';
-        break;
-      case 0x23:
-        b = '3';
-        break;
-      case 0x21:
-        b = '4';
-        break;
-      case 0x20:
-        b = '5';
-        break;
-      case 0x30:
-        b = '6';
-        break;
-      case 0x38:
-        b = '7';
-        break;
-      case 0x3C:
-        b = '8';
-        break;
-      case 0x3E:
-        b = '9';
-        break;
-      case 0x3F:
-        b = '0';
-        break;
-      default:
-        b = '*';
-      } /* Ende switch */
-      lcd_putc(b);
+      code = decode(dit_dat);
+      lcd_putc(code);
     }
+//      lcd_putc('4');
   }
 }
